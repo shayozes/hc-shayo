@@ -7,5 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HcShayoApplication {
     public static void main(String[] args) {
         SpringApplication.run(HcShayoApplication.class, args);
+        HcUtils.getCache();
     }
 }

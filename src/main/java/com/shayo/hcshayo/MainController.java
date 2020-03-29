@@ -1,16 +1,11 @@
 package com.shayo.hcshayo;
 
-import com.hazelcast.core.Hazelcast;
-import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 public class MainController {
-    public static HazelcastInstance hz = Hazelcast.newHazelcastInstance();
-    // todo: in MSL, we use executor or interceptor?
-
     @RequestMapping("/")
     public String index() {
         return "Up!";
@@ -18,18 +13,21 @@ public class MainController {
 
     @RequestMapping("/set")
     public String set() {
-        IMap<Long, String> testCache = hz.getMap("test-cache");
-        testCache.addEntryListener(new EntryListener(), true);
+        IMap<Long, String> testCache = HcUtils.getCache();
 
         for (long index = 0; index < 1000; index++) {
             testCache.set(index, String.format("Shayo #%d", index));
         }
 
-        return "done.";
+        return "Hazelcast now processes";
     }
 
     @RequestMapping("/get")
     public String get() {
-        return hz.getMap("test-cache").toString();
+        StringBuilder output = new StringBuilder("<h1>/get</h1><br>");
+        for (String value : HcUtils.getCache().values()) {
+            output.append(value).append("<br>");
+        }
+        return output.toString();
     }
 }
