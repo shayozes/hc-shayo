@@ -15,4 +15,7 @@ http://www.hazelcast.com/schema/config/hazelcast-config-3.8.xsd"
             </tcp-ip>
         </join>
     </network>
+    <executor-service>
+        <pool-size>1000</pool-size>
+    </executor-service>
 </hazelcast>
