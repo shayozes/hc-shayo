@@ -3,22 +3,24 @@ package com.shayo.hcshayo;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+import org.springframework.stereotype.Component;
 
-public abstract class HcUtils {
+@Component
+public class HcUtils {
     private static HazelcastInstance hz;
     private static IMap<Long, String> cache;
 
-    public static HazelcastInstance getHcInstance() {
+    public HazelcastInstance getHcInstance() {
         if (hz == null) {
-            hz = Hazelcast.newHazelcastInstance();
+            hz = Hazelcast.getHazelcastInstanceByName("shayos-instance");
         }
         return hz;
     }
 
-    public static IMap<Long, String> getCache() {
+    public IMap<Long, String> getCache() {
         if (cache == null) {
-            cache = HcUtils.getHcInstance().getMap("test-cache");
-            cache.addEntryListener(new EntryListener(), true);
+            cache = getHcInstance().getMap("test-cache");
+            cache.addEntryListener(new EntryListener(cache), true);
         }
         return cache;
     }
